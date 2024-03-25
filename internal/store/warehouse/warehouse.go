@@ -119,7 +119,7 @@ func (s *storeImpl) Update(ctx context.Context, id int, entity UpdateEntity) (En
 		return Entity{}, err
 	}
 
-	good, err := getWarehouseByIDInTx(ctx, id, tx)
+	warehouse, err := getWarehouseByIDInTx(ctx, id, tx)
 	if err != nil {
 		logger.Log.Error("get warehouse by id",
 			"error", err)
@@ -129,10 +129,10 @@ func (s *storeImpl) Update(ctx context.Context, id int, entity UpdateEntity) (En
 		return Entity{}, err
 	}
 	if entity.Name != nil {
-		good.Name = *entity.Name
+		warehouse.Name = *entity.Name
 	}
 	if entity.IsAvailable != nil {
-		good.IsAvailable = *entity.IsAvailable
+		warehouse.IsAvailable = *entity.IsAvailable
 	}
 
 	var updatedWarehouse Entity
@@ -144,8 +144,8 @@ func (s *storeImpl) Update(ctx context.Context, id int, entity UpdateEntity) (En
 			WHERE id = $3
 			RETURNING *
 		`,
-		good.Name,
-		good.IsAvailable,
+		warehouse.Name,
+		warehouse.IsAvailable,
 		id,
 	).StructScan(&updatedWarehouse)
 	if err != nil {
@@ -170,13 +170,13 @@ func (s *storeImpl) Delete(ctx context.Context, id int) error {
 		ctx,
 		`
 			UPDATE warehouses
-			SET updated_at = NOW(), deleted_at = NOW()
+			SET is_available = false, updated_at = NOW(), deleted_at = NOW()
 			WHERE id = $1
 		`,
 		id,
 	)
 	if err != nil {
-		logger.Log.Error("delete good",
+		logger.Log.Error("delete warehouses",
 			"error", err)
 		return err
 	}
