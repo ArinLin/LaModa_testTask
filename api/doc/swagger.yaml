@@ -1,0 +1,117 @@
+basePath: /hub/api/v1
+definitions:
+  model.GetGoodByIDResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.Good'
+      msg_code:
+        example: good_received
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.GetGoodsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Good'
+        type: array
+      msg_code:
+        example: goods_received
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.Good:
+    properties:
+      created_at:
+        example: "2024-03-24T21:16:31Z"
+        type: string
+      deleted_at:
+        example: "null"
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: T-Shirt
+        type: string
+      size:
+        example: s
+        type: string
+      updated_at:
+        example: "2024-03-24T21:16:31Z"
+        type: string
+    type: object
+  model.GoodNotFoundResponse:
+    properties:
+      msg_code:
+        example: good_not_found
+        type: string
+      status:
+        example: ERROR
+        type: string
+    type: object
+  model.InternalResponse:
+    properties:
+      msg_code:
+        example: general_internal
+        type: string
+      status:
+        example: ERROR
+        type: string
+    type: object
+host: server:8080
+info:
+  contact: {}
+  description: Lamoda Intentory Hub API Service Documentation
+  title: Lamoda Intentory Hub API
+  version: "1.0"
+paths:
+  /good/{id}:
+    get:
+      description: Get Goods By ID
+      parameters:
+      - description: Good ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetGoodByIDResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.GoodNotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Get Good By ID
+      tags:
+      - Goods
+  /goods:
+    get:
+      description: Get Goods List
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetGoodsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Get Goods
+      tags:
+      - Goods
+swagger: "2.0"

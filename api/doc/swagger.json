@@ -1,0 +1,172 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Lamoda Intentory Hub API Service Documentation",
+        "title": "Lamoda Intentory Hub API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "server:8080",
+    "basePath": "/hub/api/v1",
+    "paths": {
+        "/good/{id}": {
+            "get": {
+                "description": "Get Goods By ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goods"
+                ],
+                "summary": "Get Good By ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Good ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetGoodByIDResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.GoodNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/goods": {
+            "get": {
+                "description": "Get Goods List",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goods"
+                ],
+                "summary": "Get Goods",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetGoodsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.GetGoodByIDResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.Good"
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "good_received"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.GetGoodsResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Good"
+                    }
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "goods_received"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.Good": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-03-24T21:16:31Z"
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "example": "null"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "T-Shirt"
+                },
+                "size": {
+                    "type": "string",
+                    "example": "s"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2024-03-24T21:16:31Z"
+                }
+            }
+        },
+        "model.GoodNotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "good_not_found"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ERROR"
+                }
+            }
+        },
+        "model.InternalResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "general_internal"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ERROR"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    volumes:
+      - db_data:/var/lib/postgres/data
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: /var/lib/postgres/data
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}", "-t", "1" ] 
+      interval: 1s
+      timeout: 2s
+      retries: 5
+
+  migrator:
+    build: ../migrations
+    command:
+      - migrate
+      - --conn-string
+      - postgres://${DB_USER}:${DB_PASS}@db:${DB_PORT}/${DB_NAME}
+      - --migrations
+      - /migrations
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    build: 
+      context: ..
+      dockerfile: Dockerfile.seed
+    environment:
+      POSTGRES_HOST: ${DB_HOST}:${DB_PORT}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB_NAME: ${DB_NAME}
+      POSTGRES_DISABLE_TLS: ${DB_DISABLE_TLS}
+      GOODS: ${GOODS}
+      STOCKS: ${STOCKS}
+      WAREHOUSES: ${WAREHOUSES}
+    depends_on:
+      - migrator
+
+  server:
+    build: 
+      context: ..
+      dockerfile: Dockerfile.hub
+    restart: always
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    environment:
+      SERVER_HOST: ${SERVER_HOST}:${SERVER_PORT}
+      POSTGRES_HOST: ${DB_HOST}:${DB_PORT}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB_NAME: ${DB_NAME}
+      POSTGRES_DISABLE_TLS: ${DB_DISABLE_TLS}
+    depends_on:
+      - migrator
+
+  swagger:
+    build: 
+      context: ..
+      dockerfile: Dockerfile.swagger
+    restart: always
+    ports:
+      - ${SWAGGER_PORT}:${SWAGGER_PORT}
+    environment:
+      SWAGGER_PORT: ${SWAGGER_PORT}
+    depends_on:
+      - migrator
+
+volumes:
+  db_data:
