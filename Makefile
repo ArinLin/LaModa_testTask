@@ -1,3 +1,6 @@
+tests:
+	go test -count=1 ./internal/store/...
+
 coverage:
 	go test -count=1 -coverprofile=coverage.out ./internal/store/...
 	go tool cover -html="coverage.out"
