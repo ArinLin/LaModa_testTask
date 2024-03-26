@@ -17,6 +17,14 @@ const (
 	WarehouseDeletedCode   = "warehouse_deleted"
 	WarehouseNotFoundCode  = "warehouse_not_found"
 
+	// stocks resps
+	StocksReceivedCode   = "stocks_received"
+	StocksReservedCode   = "stocks_reserved"
+	StocksReleasedCode   = "stocks_released"
+	StockNotFoundCode    = "stock_not_found"
+	NotEnoughAmountCode  = "not_enough_amount"
+	NotEnoughReserveCode = "not_enough_reserve"
+
 	// general
 	InternalErrorCode = "general_internal"
 )
