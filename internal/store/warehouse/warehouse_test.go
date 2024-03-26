@@ -252,6 +252,69 @@ func TestGetAll(t *testing.T) {
 	}
 }
 
+func TestCheckExistance(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	postgresContainer, mappedPort := tests.CreateInventoryHubTestPostgresContainer(ctx)
+	defer tests.TerminateInventoryHubTestContainer(ctx, postgresContainer)
+
+	postgresClient, err := postgres.NewClient(postgres.Config{
+		User:       tests.PostgresInventoryHubTestUser,
+		Password:   tests.PostgresInventoryHubTestPassword,
+		Host:       tests.PostgresInventoryHubTestHost + ":" + mappedPort,
+		DBName:     tests.PostgresInventoryHubTestDB,
+		DisableTLS: true,
+	})
+	if err != nil {
+		t.Errorf("error with starting postgres client: %s", err.Error())
+	}
+	defer postgresClient.Close()
+
+	store := New(postgresClient)
+
+	warehouse, err := store.Create(ctx, CreateEntity{
+		Name:        "Logopark Bykovo",
+		IsAvailable: true,
+	})
+	if err != nil {
+		t.Errorf("error with creating test data: %s", err.Error())
+	}
+
+	for _, test := range []struct {
+		Name    string
+		ID      int
+		WantErr bool
+		Err     string
+	}{
+		{
+			Name: "Successful check existent a warehouse",
+			ID:   warehouse.ID,
+		},
+		{
+			Name:    "Check non-existent warehouse",
+			WantErr: true,
+			Err:     sql.ErrNoRows.Error(),
+		},
+	} {
+		t.Run(test.Name, func(t *testing.T) {
+			err := store.CheckExistence(ctx, test.ID)
+			if err != nil {
+				if !test.WantErr {
+					t.Errorf("unexpected error: %s", err.Error())
+				}
+				if err.Error() != test.Err {
+					t.Errorf("unexpected error. Expected %q but got %q", test.Err, err.Error())
+				}
+				return
+			}
+			if test.WantErr {
+				t.Errorf("expected error but nothing got")
+			}
+		})
+	}
+}
+
 func TestUpdate(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

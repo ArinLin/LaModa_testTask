@@ -206,12 +206,6 @@ func TestGetGoodsAmountByWarehouseID(t *testing.T) {
 			ID:     1,
 			Amount: 100,
 		},
-		{
-			Name:    "Get a goods amount by non-existent warehouse id",
-			ID:      1000,
-			WantErr: true,
-			Err:     sql.ErrNoRows.Error(),
-		},
 	} {
 		t.Run(test.Name, func(t *testing.T) {
 			entities, err := store.GetGoodsAmountByWarehouseID(ctx, test.ID)
