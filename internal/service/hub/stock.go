@@ -23,6 +23,9 @@ type (
 )
 
 func (s *serviceImpl) GetStockByWarehouseID(ctx context.Context, warehouseID int) ([]stock.AmountEntity, error) {
+	if err := s.warehousesStore.CheckExistence(ctx, warehouseID); err != nil {
+		return nil, err
+	}
 	data, err := s.stocksStore.GetGoodsAmountByWarehouseID(ctx, warehouseID)
 	if err != nil {
 		return nil, err

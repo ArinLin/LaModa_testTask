@@ -20,7 +20,7 @@ type (
 	}
 
 	UpdateWarehouseModel struct {
-		Name        *string `json:"name" validate:"required_without=Size,omitempty,min=4,max=64"`
+		Name        *string `json:"name" validate:"required_without=IsAvailable,omitempty,min=4,max=64"`
 		IsAvailable *bool   `json:"is_available,omitempty"`
 	}
 )

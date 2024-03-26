@@ -20,11 +20,11 @@ var globalFlags = []cli.Flag{
 	},
 }
 
-// @title		Lamoda Intentory Hub API
-// @version		1.0
-// @description	Lamoda Intentory Hub API Service Documentation
-// @host		server:8080
-// @BasePath	/hub/api/v1
+//	@title			Lamoda Intentory Hub API
+//	@version		1.0
+//	@description	Lamoda Intentory Hub API Service Documentation
+//	@host			server:8080
+//	@BasePath		/hub/api/v1
 func main() {
 	app := &cli.App{
 		Usage: "Lamoda Intentory Hub",

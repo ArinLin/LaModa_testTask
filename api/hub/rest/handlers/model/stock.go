@@ -7,6 +7,15 @@ type Stock struct {
 	Reserved int    `json:"reserved" example:"10"`
 }
 
+type ChangeAmountRequest struct {
+	Goods []Item `json:"goods"`
+}
+
+type Item struct {
+	GoodID int `json:"good_id" example:"1"`
+	Amount int `json:"amount" example:"83"`
+}
+
 type GetStocksResponse struct {
 	Status  string  `json:"status" example:"OK"`
 	MsgCode string  `json:"msg_code" example:"stocks_received"`

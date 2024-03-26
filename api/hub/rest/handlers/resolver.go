@@ -43,8 +43,8 @@ func (r *Resolver) initRoutes() {
 
 	// stocks
 	r.server.GET(pathPrefix+"/stocks/warehouse/:id", r.getStockByWarehouseID)
-	r.server.POST(pathPrefix+"/stocks/reserve", r.reserveStock)
-	r.server.POST(pathPrefix+"/stocks/release", r.releaseStock)
+	r.server.PUT(pathPrefix+"/stocks/reserve", r.reserveStock)
+	r.server.PUT(pathPrefix+"/stocks/release", r.releaseStock)
 
 	// warehouses
 	r.server.GET(pathPrefix+"/warehouse/:id", r.getWarehouseByID)

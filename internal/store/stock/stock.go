@@ -124,10 +124,6 @@ func (s *storeImpl) GetGoodsAmountByWarehouseID(ctx context.Context, warehouseID
 			"error", err)
 	}
 
-	if len(goodsAmount) == 0 {
-		return nil, core.ErrStockNotFound
-	}
-
 	return goodsAmount, err
 }
 
@@ -192,8 +188,10 @@ func getWarehouseStockByGoodIDInTx(ctx context.Context, goodID int, orderBy stri
 			SELECT warehouse_id, amount, reserved
 			FROM stocks
 			JOIN warehouses w ON w.id = warehouse_id
+			JOIN goods g ON good_id = g.id
 			WHERE good_id = $1
 			AND w.is_available = true
+			AND g.deleted_at IS NULL
 			ORDER BY $2 DESC
 		`,
 		goodID,

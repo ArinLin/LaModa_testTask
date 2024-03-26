@@ -14,37 +14,37 @@ type Warehouse struct {
 }
 
 type CreateWarehouseRequest struct {
-	Name        string `json:"name" example:"Bojazbus"`
+	Name        string `json:"name" example:"Sofino"`
 	IsAvailable bool   `json:"is_available" example:"true"`
 }
 
 type UpdateWarehouseRequest struct {
-	Name        string `json:"name" example:"Tegespu"`
+	Name        string `json:"name" example:"Sofino 2"`
 	IsAvailable bool   `json:"is_available" example:"false"`
 }
 
 type GetWarehousesResponse struct {
 	Status  string      `json:"status" example:"OK"`
 	MsgCode string      `json:"msg_code" example:"warehouses_received"`
-	Data    []Warehouse `json:"data" example:"[{\"id\":1,\"name\":\"Bojazbus\",\"is_available\":\"true\",\"created_at\":\"2024-03-24T21:16:36Z\",\"updated_at\":\"2024-03-24T21:16:36Z\",\"deleted_at\":null},{\"id\":2,\"name\":\"Ratasit\",\"is_available\":\"true\",\"created_at\":\"2024-03-24T22:04:29Z\",\"updated_at\":\"2024-03-24T22:04:29Z\",\"deleted_at\":null}]"`
+	Data    []Warehouse `json:"data"`
 }
 
 type GetWarehouseByIDResponse struct {
 	Status  string    `json:"status" example:"OK"`
 	MsgCode string    `json:"msg_code" example:"warehouse_received"`
-	Data    Warehouse `json:"data" example:"{\"id\":1,\"name\":\"Bojazbus\",\"is_available\":\"true\",\"created_at\":\"2024-03-24T21:16:36Z\",\"updated_at\":\"2024-03-24T21:16:36Z\",\"deleted_at\":null}"`
+	Data    Warehouse `json:"data"`
 }
 
 type CreateWarehouseResponse struct {
 	Status  string    `json:"status" example:"OK"`
 	MsgCode string    `json:"msg_code" example:"warehouse_created"`
-	Data    Warehouse `json:"data" example:"{\"id\":1,\"name\":\"Bojazbus\",\"is_available\":\"true\",\"created_at\":\"2024-03-24T21:16:36Z\",\"updated_at\":\"2024-03-24T21:16:36Z\",\"deleted_at\":null}"`
+	Data    Warehouse `json:"data"`
 }
 
 type UpdateWarehouseResponse struct {
 	Status  string    `json:"status" example:"OK"`
 	MsgCode string    `json:"msg_code" example:"warehouse_updated"`
-	Data    Warehouse `json:"data" example:"{\"id\":1,\"name\":\"Tegespu\",\"is_available\":\"false\",\"created_at\":\"2024-03-24T21:16:36Z\",\"updated_at\":\"2024-03-24T21:46:36Z\",\"deleted_at\":null}"`
+	Data    Warehouse `json:"data"`
 }
 
 type DeleteWarehouseResponse struct {

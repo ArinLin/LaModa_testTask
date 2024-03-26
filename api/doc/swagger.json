@@ -9,6 +9,55 @@
     "host": "server:8080",
     "basePath": "/hub/api/v1",
     "paths": {
+        "/good": {
+            "post": {
+                "description": "Create Good",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goods"
+                ],
+                "summary": "Create Good",
+                "parameters": [
+                    {
+                        "description": "Params to create good",
+                        "name": "good",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateGoodRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetGoodByIDResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidBodyResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.ValidationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/good/{id}": {
             "get": {
                 "description": "Get Goods By ID",
@@ -21,7 +70,7 @@
                 "summary": "Get Good By ID",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Good ID",
                         "name": "id",
                         "in": "path",
@@ -35,10 +84,121 @@
                             "$ref": "#/definitions/model.GetGoodByIDResponse"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidIDResponse"
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/model.GoodNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Good By ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goods"
+                ],
+                "summary": "Delete Good",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Good ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.DeleteGoodResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidIDResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.GoodNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update Good By ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Goods"
+                ],
+                "summary": "Update Good By ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Good ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Params to update good",
+                        "name": "good",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateGoodRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetGoodByIDResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidIDResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.GoodNotFoundResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.ValidationResponse"
                         }
                     },
                     "500": {
@@ -75,9 +235,492 @@
                     }
                 }
             }
+        },
+        "/stocks/release": {
+            "put": {
+                "description": "Release Stock",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stocks"
+                ],
+                "summary": "Release Stock",
+                "parameters": [
+                    {
+                        "description": "List of goods with amount to release",
+                        "name": "stocks",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ChangeAmountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ReleaseStockResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidBodyResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.GoodNotFoundResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.ValidationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocks/reserve": {
+            "put": {
+                "description": "Reserve Stock",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stocks"
+                ],
+                "summary": "Reserve Stock",
+                "parameters": [
+                    {
+                        "description": "List of goods with amount to reserve",
+                        "name": "warehouse",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ChangeAmountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ReserveStockResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidBodyResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.GoodNotFoundResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.ValidationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocks/warehouse/{id}": {
+            "get": {
+                "description": "Get Stocks By Warehouse ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stocks"
+                ],
+                "summary": "Get Stocks By Warehouse ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Warehouse ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetStocksResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.WarehouseNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/warehouse": {
+            "post": {
+                "description": "Create Warehouse",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Create Warehouse",
+                "parameters": [
+                    {
+                        "description": "Params to create warehouse",
+                        "name": "warehouse",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateWarehouseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateWarehouseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidBodyResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.ValidationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/warehouse/{id}": {
+            "get": {
+                "description": "Get Warehouse By ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Get Warehouse By ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Warehouse ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetWarehouseByIDResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidIDResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.WarehouseNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Warehouse By Id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Delete Warehouse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Warehouse ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.DeleteWarehouseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidIDResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.WarehouseNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update Warehouse By ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Update Warehouse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Warehouse ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Params to update warehouse",
+                        "name": "warehouse",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateWarehouseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateWarehouseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.BadRequestInvalidIDResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.WarehouseNotFoundResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/model.ValidationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/warehouses": {
+            "get": {
+                "description": "Get Warehouses List",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Get Warehouses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetWarehousesResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.InternalResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "model.BadRequestInvalidBodyResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "invalid_body"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ERROR"
+                }
+            }
+        },
+        "model.BadRequestInvalidIDResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "invalid_id"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ERROR"
+                }
+            }
+        },
+        "model.ChangeAmountRequest": {
+            "type": "object",
+            "properties": {
+                "goods": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Item"
+                    }
+                }
+            }
+        },
+        "model.CreateGoodRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "T-Shirt"
+                },
+                "size": {
+                    "type": "string",
+                    "example": "m"
+                }
+            }
+        },
+        "model.CreateWarehouseRequest": {
+            "type": "object",
+            "properties": {
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Sofino"
+                }
+            }
+        },
+        "model.CreateWarehouseResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.Warehouse"
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "warehouse_created"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.DeleteGoodResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "good_deleted"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.DeleteWarehouseResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "warehouse_deleted"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
         "model.GetGoodByIDResponse": {
             "type": "object",
             "properties": {
@@ -106,6 +749,60 @@
                 "msg_code": {
                     "type": "string",
                     "example": "goods_received"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.GetStocksResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Stock"
+                    }
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "stocks_received"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.GetWarehouseByIDResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.Warehouse"
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "warehouse_received"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.GetWarehousesResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Warehouse"
+                    }
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "warehouses_received"
                 },
                 "status": {
                     "type": "string",
@@ -161,6 +858,194 @@
                 "msg_code": {
                     "type": "string",
                     "example": "general_internal"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ERROR"
+                }
+            }
+        },
+        "model.Item": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 83
+                },
+                "good_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "model.ReleaseStockResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "stock_released"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.ReserveStockResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "stock_reserved"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.Stock": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "good_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "good_name": {
+                    "type": "string",
+                    "example": "Hat"
+                },
+                "reserved": {
+                    "type": "integer",
+                    "example": 10
+                }
+            }
+        },
+        "model.UpdateGoodRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Shoes"
+                },
+                "size": {
+                    "type": "string",
+                    "example": "s"
+                }
+            }
+        },
+        "model.UpdateWarehouseRequest": {
+            "type": "object",
+            "properties": {
+                "is_available": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Sofino 2"
+                }
+            }
+        },
+        "model.UpdateWarehouseResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.Warehouse"
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "warehouse_updated"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "model.ValidationError": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "example": "FieldName"
+                },
+                "param": {
+                    "type": "string",
+                    "example": "Param"
+                },
+                "tag": {
+                    "type": "string",
+                    "example": "Tag"
+                }
+            }
+        },
+        "model.ValidationErrors": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ValidationError"
+                    }
+                }
+            }
+        },
+        "model.ValidationResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.ValidationErrors"
+                },
+                "msg_code": {
+                    "type": "string",
+                    "example": "go_validation"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ERROR"
+                }
+            }
+        },
+        "model.Warehouse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-03-24T21:16:31Z"
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "example": "null"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Sofino"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2024-03-24T21:16:31Z"
+                }
+            }
+        },
+        "model.WarehouseNotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "msg_code": {
+                    "type": "string",
+                    "example": "warehouse_not_found"
                 },
                 "status": {
                     "type": "string",

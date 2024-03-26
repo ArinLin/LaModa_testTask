@@ -1,9 +1,13 @@
 package model
 
-import "lamoda/pkg/web"
+type ValidationError struct {
+	Tag   string `json:"tag" example:"Tag"`
+	Field string `json:"field" example:"FieldName"`
+	Param string `json:"param" example:"Param"`
+}
 
 type ValidationErrors struct {
-	Errors []web.ValidationError `json:"errors"`
+	Errors []ValidationError `json:"errors"`
 }
 
 type BadRequestInvalidBodyResponse struct {
@@ -29,7 +33,7 @@ type WarehouseNotFoundResponse struct {
 type ValidationResponse struct {
 	Status  string           `json:"status" example:"ERROR"`
 	MsgCode string           `json:"msg_code" example:"go_validation"`
-	Data    ValidationErrors `json:"data" example:"{\"errors\": [{\"tag\": \"<tag>\", \"field\": \"<field>\", \"param\": \"<param>\"}]}"`
+	Data    ValidationErrors `json:"data"`
 }
 
 type InternalResponse struct {

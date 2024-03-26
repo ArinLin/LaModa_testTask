@@ -16,6 +16,7 @@ type (
 		Create(context.Context, CreateEntity) (Entity, error)
 		GetByID(context.Context, int) (Entity, error)
 		GetAll(context.Context) ([]Entity, error)
+		CheckExistence(context.Context, int) error
 		Update(context.Context, int, UpdateEntity) (Entity, error)
 		Delete(context.Context, int) error
 	}
@@ -109,6 +110,25 @@ func (s *storeImpl) GetAll(ctx context.Context) ([]Entity, error) {
 	}
 
 	return warehouses, err
+}
+
+func (s *storeImpl) CheckExistence(ctx context.Context, id int) error {
+	var existID int
+
+	err := s.client.QueryRowContext(
+		ctx,
+		`
+			SELECT id
+			FROM warehouses
+			WHERE id = $1
+			AND is_available = true
+		`, id).Scan(&existID)
+	if err != nil {
+		logger.Log.Error("check warehouses existence",
+			"error", err)
+	}
+
+	return err
 }
 
 func (s *storeImpl) Update(ctx context.Context, id int, entity UpdateEntity) (Entity, error) {

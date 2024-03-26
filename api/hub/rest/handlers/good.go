@@ -13,6 +13,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary		Get Goods
+// @Description	Get Goods List
+// @Tags			Goods
+// @Produce		json
+// @Success		200	{object}	model.GetGoodsResponse
+// @Failure		500	{object}	model.InternalResponse
+// @Router			/goods [get]
 func (r *Resolver) getGoods(c echo.Context) error {
 	data, err := r.service.GetGoods(c.Request().Context())
 	if err != nil {
@@ -24,6 +31,16 @@ func (r *Resolver) getGoods(c echo.Context) error {
 	return c.JSON(http.StatusOK, pres.Response())
 }
 
+// @Summary		Get Good By ID
+// @Description	Get Goods By ID
+// @Tags			Goods
+// @Produce		json
+// @Param			id	path		int	true	"Good ID"
+// @Success		200	{object}	model.GetGoodByIDResponse
+// @Failure		400	{object}	model.BadRequestInvalidIDResponse
+// @Failure		404	{object}	model.GoodNotFoundResponse
+// @Failure		500	{object}	model.InternalResponse
+// @Router			/good/{id} [get]
 func (r *Resolver) getGoodByID(c echo.Context) error {
 	id, err := webutil.ParseID(c)
 	if err != nil {
@@ -45,6 +62,16 @@ func (r *Resolver) getGoodByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, pres.Response(core.GoodReceivedCode))
 }
 
+// @Summary		Create Good
+// @Description	Create Good
+// @Tags			Goods
+// @Produce		json
+// @Param			good	body		model.CreateGoodRequest	true	"Params to create good"
+// @Success		200		{object}	model.GetGoodByIDResponse
+// @Failure		400		{object}	model.BadRequestInvalidBodyResponse
+// @Failure		422		{object}	model.ValidationResponse
+// @Failure		500		{object}	model.InternalResponse
+// @Router			/good [post]
 func (r *Resolver) createGood(c echo.Context) error {
 	var model hub.CreateGoodModel
 	if err := webutil.BodyChecker(c, &model); err != nil {
@@ -61,6 +88,18 @@ func (r *Resolver) createGood(c echo.Context) error {
 	return c.JSON(http.StatusCreated, pres.Response(core.GoodCreatedCode))
 }
 
+// @Summary		Update Good By ID
+// @Description	Update Good By ID
+// @Tags			Goods
+// @Produce		json
+// @Param			id		path		int					true	"Good ID"
+// @Param			good	body		model.UpdateGoodRequest	true	"Params to update good"
+// @Success		200		{object}	model.GetGoodByIDResponse
+// @Failure		400		{object}	model.BadRequestInvalidIDResponse
+// @Failure		404		{object}	model.GoodNotFoundResponse
+// @Failure		422		{object}	model.ValidationResponse
+// @Failure		500		{object}	model.InternalResponse
+// @Router			/good/{id} [patch]
 func (r *Resolver) updateGood(c echo.Context) error {
 	id, err := webutil.ParseID(c)
 	if err != nil {
@@ -87,6 +126,16 @@ func (r *Resolver) updateGood(c echo.Context) error {
 	return c.JSON(http.StatusOK, pres.Response(core.GoodUpdatedCode))
 }
 
+// @Summary		Delete Good
+// @Description	Delete Good By ID
+// @Tags			Goods
+// @Produce		json
+// @Param			id	path		int	true	"Good ID"
+// @Success		200	{object}	model.DeleteGoodResponse
+// @Failure		400	{object}	model.BadRequestInvalidIDResponse
+// @Failure		404	{object}	model.GoodNotFoundResponse
+// @Failure		500	{object}	model.InternalResponse
+// @Router			/good/{id} [delete]
 func (r *Resolver) deleteGood(c echo.Context) error {
 	id, err := webutil.ParseID(c)
 	if err != nil {

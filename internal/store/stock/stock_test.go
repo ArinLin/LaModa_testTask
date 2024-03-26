@@ -210,7 +210,7 @@ func TestGetGoodsAmountByWarehouseID(t *testing.T) {
 			Name:    "Get a goods amount by non-existent warehouse id",
 			ID:      1000,
 			WantErr: true,
-			Err:     core.ErrStockNotFound.Error(),
+			Err:     sql.ErrNoRows.Error(),
 		},
 	} {
 		t.Run(test.Name, func(t *testing.T) {

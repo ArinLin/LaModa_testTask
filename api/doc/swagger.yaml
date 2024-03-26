@@ -1,5 +1,77 @@
 basePath: /hub/api/v1
 definitions:
+  model.BadRequestInvalidBodyResponse:
+    properties:
+      msg_code:
+        example: invalid_body
+        type: string
+      status:
+        example: ERROR
+        type: string
+    type: object
+  model.BadRequestInvalidIDResponse:
+    properties:
+      msg_code:
+        example: invalid_id
+        type: string
+      status:
+        example: ERROR
+        type: string
+    type: object
+  model.ChangeAmountRequest:
+    properties:
+      goods:
+        items:
+          $ref: '#/definitions/model.Item'
+        type: array
+    type: object
+  model.CreateGoodRequest:
+    properties:
+      name:
+        example: T-Shirt
+        type: string
+      size:
+        example: m
+        type: string
+    type: object
+  model.CreateWarehouseRequest:
+    properties:
+      is_available:
+        example: true
+        type: boolean
+      name:
+        example: Sofino
+        type: string
+    type: object
+  model.CreateWarehouseResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.Warehouse'
+      msg_code:
+        example: warehouse_created
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.DeleteGoodResponse:
+    properties:
+      msg_code:
+        example: good_deleted
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.DeleteWarehouseResponse:
+    properties:
+      msg_code:
+        example: warehouse_deleted
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
   model.GetGoodByIDResponse:
     properties:
       data:
@@ -19,6 +91,43 @@ definitions:
         type: array
       msg_code:
         example: goods_received
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.GetStocksResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Stock'
+        type: array
+      msg_code:
+        example: stocks_received
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.GetWarehouseByIDResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.Warehouse'
+      msg_code:
+        example: warehouse_received
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.GetWarehousesResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Warehouse'
+        type: array
+      msg_code:
+        example: warehouses_received
         type: string
       status:
         example: OK
@@ -63,6 +172,137 @@ definitions:
         example: ERROR
         type: string
     type: object
+  model.Item:
+    properties:
+      amount:
+        example: 83
+        type: integer
+      good_id:
+        example: 1
+        type: integer
+    type: object
+  model.ReleaseStockResponse:
+    properties:
+      msg_code:
+        example: stock_released
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.ReserveStockResponse:
+    properties:
+      msg_code:
+        example: stock_reserved
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.Stock:
+    properties:
+      amount:
+        example: 10
+        type: integer
+      good_id:
+        example: 1
+        type: integer
+      good_name:
+        example: Hat
+        type: string
+      reserved:
+        example: 10
+        type: integer
+    type: object
+  model.UpdateGoodRequest:
+    properties:
+      name:
+        example: Shoes
+        type: string
+      size:
+        example: s
+        type: string
+    type: object
+  model.UpdateWarehouseRequest:
+    properties:
+      is_available:
+        example: false
+        type: boolean
+      name:
+        example: Sofino 2
+        type: string
+    type: object
+  model.UpdateWarehouseResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.Warehouse'
+      msg_code:
+        example: warehouse_updated
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+  model.ValidationError:
+    properties:
+      field:
+        example: FieldName
+        type: string
+      param:
+        example: Param
+        type: string
+      tag:
+        example: Tag
+        type: string
+    type: object
+  model.ValidationErrors:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/model.ValidationError'
+        type: array
+    type: object
+  model.ValidationResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.ValidationErrors'
+      msg_code:
+        example: go_validation
+        type: string
+      status:
+        example: ERROR
+        type: string
+    type: object
+  model.Warehouse:
+    properties:
+      created_at:
+        example: "2024-03-24T21:16:31Z"
+        type: string
+      deleted_at:
+        example: "null"
+        type: string
+      id:
+        example: 1
+        type: integer
+      is_available:
+        example: true
+        type: boolean
+      name:
+        example: Sofino
+        type: string
+      updated_at:
+        example: "2024-03-24T21:16:31Z"
+        type: string
+    type: object
+  model.WarehouseNotFoundResponse:
+    properties:
+      msg_code:
+        example: warehouse_not_found
+        type: string
+      status:
+        example: ERROR
+        type: string
+    type: object
 host: server:8080
 info:
   contact: {}
@@ -70,15 +310,16 @@ info:
   title: Lamoda Intentory Hub API
   version: "1.0"
 paths:
-  /good/{id}:
-    get:
-      description: Get Goods By ID
+  /good:
+    post:
+      description: Create Good
       parameters:
-      - description: Good ID
-        in: path
-        name: id
+      - description: Params to create good
+        in: body
+        name: good
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/model.CreateGoodRequest'
       produces:
       - application/json
       responses:
@@ -86,6 +327,71 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.GetGoodByIDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidBodyResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.ValidationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Create Good
+      tags:
+      - Goods
+  /good/{id}:
+    delete:
+      description: Delete Good By ID
+      parameters:
+      - description: Good ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DeleteGoodResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidIDResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.GoodNotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Delete Good
+      tags:
+      - Goods
+    get:
+      description: Get Goods By ID
+      parameters:
+      - description: Good ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetGoodByIDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidIDResponse'
         "404":
           description: Not Found
           schema:
@@ -95,6 +401,46 @@ paths:
           schema:
             $ref: '#/definitions/model.InternalResponse'
       summary: Get Good By ID
+      tags:
+      - Goods
+    patch:
+      description: Update Good By ID
+      parameters:
+      - description: Good ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Params to update good
+        in: body
+        name: good
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateGoodRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetGoodByIDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidIDResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.GoodNotFoundResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.ValidationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Update Good By ID
       tags:
       - Goods
   /goods:
@@ -114,4 +460,253 @@ paths:
       summary: Get Goods
       tags:
       - Goods
+  /stocks/release:
+    put:
+      description: Release Stock
+      parameters:
+      - description: List of goods with amount to release
+        in: body
+        name: stocks
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangeAmountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ReleaseStockResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidBodyResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.GoodNotFoundResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.ValidationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Release Stock
+      tags:
+      - Stocks
+  /stocks/reserve:
+    put:
+      description: Reserve Stock
+      parameters:
+      - description: List of goods with amount to reserve
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangeAmountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ReserveStockResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidBodyResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.GoodNotFoundResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.ValidationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Reserve Stock
+      tags:
+      - Stocks
+  /stocks/warehouse/{id}:
+    get:
+      description: Get Stocks By Warehouse ID
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetStocksResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.WarehouseNotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Get Stocks By Warehouse ID
+      tags:
+      - Stocks
+  /warehouse:
+    post:
+      description: Create Warehouse
+      parameters:
+      - description: Params to create warehouse
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateWarehouseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CreateWarehouseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidBodyResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.ValidationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Create Warehouse
+      tags:
+      - Warehouses
+  /warehouse/{id}:
+    delete:
+      description: Delete Warehouse By Id
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DeleteWarehouseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidIDResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.WarehouseNotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Delete Warehouse
+      tags:
+      - Warehouses
+    get:
+      description: Get Warehouse By ID
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetWarehouseByIDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidIDResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.WarehouseNotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Get Warehouse By ID
+      tags:
+      - Warehouses
+    patch:
+      description: Update Warehouse By ID
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Params to update warehouse
+        in: body
+        name: warehouse
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateWarehouseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UpdateWarehouseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BadRequestInvalidIDResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.WarehouseNotFoundResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/model.ValidationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Update Warehouse
+      tags:
+      - Warehouses
+  /warehouses:
+    get:
+      description: Get Warehouses List
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetWarehousesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.InternalResponse'
+      summary: Get Warehouses
+      tags:
+      - Warehouses
 swagger: "2.0"
