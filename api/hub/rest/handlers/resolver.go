@@ -38,7 +38,7 @@ func (r *Resolver) initRoutes() {
 	r.server.GET(pathPrefix+"/good/:id", r.getGoodByID)
 	r.server.GET(pathPrefix+"/goods", r.getGoods)
 	r.server.POST(pathPrefix+"/good", r.createGood)
-	r.server.PUT(pathPrefix+"/good/:id", r.updateGood)
+	r.server.PATCH(pathPrefix+"/good/:id", r.updateGood)
 	r.server.DELETE(pathPrefix+"/good/:id", r.deleteGood)
 
 	// stocks
@@ -50,7 +50,7 @@ func (r *Resolver) initRoutes() {
 	r.server.GET(pathPrefix+"/warehouse/:id", r.getWarehouseByID)
 	r.server.GET(pathPrefix+"/warehouses", r.getWarehouses)
 	r.server.POST(pathPrefix+"/warehouse", r.createWarehouse)
-	r.server.PUT(pathPrefix+"/warehouse/:id", r.updateWarehouse)
+	r.server.PATCH(pathPrefix+"/warehouse/:id", r.updateWarehouse)
 	r.server.DELETE(pathPrefix+"/warehouse/:id", r.deleteWarehouse)
 }
 
